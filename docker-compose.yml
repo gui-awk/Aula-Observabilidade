@@ -1,52 +1,65 @@
 services:
   postgres:
     image: postgres:15-alpine
-    # REMOVA a linha "ports:" - sem exposição pública
     environment:
       POSTGRES_DB: observability
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     volumes:
       - /mnt/postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter
-    # REMOVA a linha "ports:" - sem exposição pública
     environment:
       DATA_SOURCE_NAME: postgresql://user:password@postgres:5432/observability?sslmode=disable
     depends_on:
       - postgres
+    restart: unless-stopped
 
   load-generator:
-    # Sem porta exposta - só executa internamente
-    # (mantenha como está)
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM python:3.11-alpine
+        RUN pip install psycopg2-binary
+        COPY load_generator.py /app/load_generator.py
+        WORKDIR /app
+        CMD ["python", "load_generator.py"]
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: observability
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    depends_on:
+      - postgres
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus
-    # REMOVA a linha "ports:" - sem exposição pública
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: unless-stopped
 
   grafana:
     image: grafana/grafana
-    # REMOVA a linha "ports:" - sem exposição pública
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
+    restart: unless-stopped
 
   node_exporter:
     image: prom/node-exporter
-    # REMOVA a linha "ports:" - sem exposição pública
+    restart: unless-stopped
 
   ping_exporter:
     image: czerwonk/ping_exporter
-    # REMOVA a linha "ports:" - sem exposição pública
+    restart: unless-stopped
 
-  # ADICIONE este serviço NGINX
   nginx:
     build: ./nginx
     ports:
