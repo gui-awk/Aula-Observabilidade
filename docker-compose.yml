@@ -33,6 +33,8 @@ services:
     build:
       context: ./prometheus
     image: obs-prometheus
+    environment:
+      - POSTGRES_EXPORTER_IP=${POSTGRES_EXPORTER_IP}
     container_name: obs-prometheus
     restart: unless-stopped
     depends_on:
