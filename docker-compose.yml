@@ -60,6 +60,9 @@ services:
     image: czerwonk/ping_exporter
     cap_add:
       - NET_RAW
+    volumes:
+      - ./ping-exporter/ping_exporter.yml:/config/config.yml:ro
+    command: --config.path=/config/config.yml
     restart: unless-stopped
 
   nginx:
