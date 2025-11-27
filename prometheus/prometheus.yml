@@ -18,4 +18,4 @@ scrape_configs:
 
   - job_name: 'postgres'
     static_configs:
-      - targets: ['${POSTGRES_EXPORTER_IP}:9187']
+      - targets: ['postgres_exporter:9187']
