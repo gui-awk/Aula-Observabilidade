@@ -11,14 +11,14 @@ if [ ! -f /etc/nginx/ssl/nginx.crt ]; then
     chmod 600 /etc/nginx/ssl/nginx.key
 fi
 
-# Criar htpasswd se não existir (usuário padrão: admin / senha: admin123)
+# Criar htpasswd se não existir (usuário padrão: admin / senha: LMjz6DuM2UX1Qug6NYxA7tNDJhIb3mOx)
 if [ ! -f /etc/nginx/.htpasswd ]; then
-    echo "Creating htpasswd file with default credentials (admin/admin123)..."
-    htpasswd -bc /etc/nginx/.htpasswd admin admin123
+    echo "Creating htpasswd file with default credentials (admin/LMjz6DuM2UX1Qug6NYxA7tNDJhIb3mOx)..."
+    htpasswd -bc /etc/nginx/.htpasswd admin LMjz6DuM2UX1Qug6NYxA7tNDJhIb3mOx
 fi
 
 echo "NGINX is ready!"
-echo "Default credentials: admin / admin123"
+echo "Default credentials: admin / LMjz6D****************x"
 echo "Access: https://<your-ip>"
 
 # Executar comando original

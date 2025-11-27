@@ -46,8 +46,8 @@ services:
   grafana:
     image: grafana/grafana
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=gui
+      - GF_SECURITY_ADMIN_PASSWORD=LMjz6DuM2UX1Qug6NYxA7tNDJhIb3mOx
     depends_on:
       - prometheus
     restart: unless-stopped
