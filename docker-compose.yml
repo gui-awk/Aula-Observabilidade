@@ -58,6 +58,8 @@ services:
 
   ping_exporter:
     image: czerwonk/ping_exporter
+    cap_add:
+      - NET_RAW
     restart: unless-stopped
 
   nginx:
