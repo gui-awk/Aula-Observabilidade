@@ -57,12 +57,13 @@ services:
     restart: unless-stopped
 
   ping_exporter:
-    image: czerwonk/ping_exporter
+    image: czerwonk/ping_exporter:latest
     cap_add:
       - NET_RAW
+    environment:
+      - CONFIG_FILE=/config/ping_exporter.yml
     volumes:
-      - ./ping-exporter/ping_exporter.yml:/config/config.yml:ro
-    command: --config.path=/config/config.yml
+      - ./ping-exporter/ping_exporter.yml:/config/ping_exporter.yml:ro
     restart: unless-stopped
 
   nginx:
