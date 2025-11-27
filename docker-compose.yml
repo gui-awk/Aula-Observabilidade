@@ -36,22 +36,32 @@ services:
     restart: unless-stopped
 
   prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+    build:
+      context: ./prometheus
+    image: obs-prometheus
+    container_name: obs-prometheus
     restart: unless-stopped
+    depends_on:
+      - exporter
+      - ping_exporter
+    volumes:
+      - prometheus-data:/prometheus
 
   grafana:
-    image: grafana/grafana
+    build:
+      context: ./grafana
+    image: obs-grafana
+    restart: unless-stopped
     environment:
-      - GF_SECURITY_ADMIN_USER=gui
+      - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=LMjz6DuM2UX1Qug6NYxA7tNDJhIb3mOx
+      - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
       - prometheus
-    restart: unless-stopped
-
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
   node_exporter:
     image: prom/node-exporter
     restart: unless-stopped
@@ -75,3 +85,7 @@ services:
       - grafana
       - prometheus
     restart: unless-stopped
+
+volumes:
+  grafana-data:
+  prometheus-data:
