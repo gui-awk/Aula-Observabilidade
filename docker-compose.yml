@@ -42,7 +42,8 @@ services:
     container_name: obs-prometheus
     restart: unless-stopped
     depends_on:
-      - exporter
+      - node_exporter
+      - postgres_exporter
       - ping_exporter
     volumes:
       - prometheus-data:/prometheus
@@ -62,6 +63,7 @@ services:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+
   node_exporter:
     image: prom/node-exporter
     restart: unless-stopped
